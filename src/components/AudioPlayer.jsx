@@ -1,9 +1,10 @@
 import { SpeakerSimpleHigh, SpeakerX } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
 
-const AudioPlayer = () => {
+const AudioPlayer = ({setTooltip}) => {
   const [audio, setAudio] = useState(null);
   const [audioMuted, setAudioMuted] = useState(false);
+
 
   useEffect(() => {
     const audioElement = new Audio('/happi.mp3');
@@ -17,6 +18,7 @@ const AudioPlayer = () => {
     if (audio) {
         audio.muted = !audio.muted; // Toggle mute state
         setAudioMuted(!audioMuted); // Unmute the audio
+        setTooltip(false)
       audio.play().catch((error) => console.error('Error playing audio:', error));
     }
   };

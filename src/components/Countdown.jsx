@@ -1,20 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  ArrowDown,
-  ArrowUp,
+  ArrowLeft,
+  ArrowRight,
   Gift,
   HandsPraying,
-  Play,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 
 import withLove from "../assets/with_love.svg";
 import celebrate from "../assets/border_bg.svg";
 import celebrateVert from "../assets/border_bg-vert.svg";
+import muna from "../assets/muna.webp";
+import muna2 from "../assets/muna-2.webp";
 import AudioPlayer from "./AudioPlayer";
-// import audio from "../../public/happi.mp3";
 
 const countdownNumber = [
   {
@@ -48,8 +48,7 @@ const Countdown = () => {
   const [isExploding, setIsExploding] = React.useState(false);
   const [isExplodingEnded, setIsExplodingEnded] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState(0);
-
-  const audioRef = useRef(null);
+  const [tooltip, setTooltip] = React.useState(true);
 
   const countdownComplete = () => {
     setIsExplodingEnded(true);
@@ -73,39 +72,59 @@ const Countdown = () => {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center overflow-x-hidden relative bg-[#F4E4DE]">
-      <motion.div className="fixed right-0 bottom-14 flex items-center rounded-full overflow-hidden pl-2 z-10 gap-x-2 border border-[#7A1487] bg-[#ffffff]"
-      initial={{ y: 100, opacity: 0, x: "-50%" }} // Start below the screen, hidden, and horizontally centered
-      animate={{ y: 0, opacity: 1, x: "-50%" }}   // Animate to its position, still centered
-      transition={{
-        type: 'spring',  // Use a spring animation for a bounce effect
-        stiffness: 100,  // Control the "bounciness"
-        damping: 10,     // Control the "speed" of the bounce
-      }}
+      <motion.div
+        className="fixed right-0 bottom-14 flex items-center rounded-full overflow-hidden pl-2 z-10 gap-x-2 border border-[#7A1487] bg-[#ffffff]"
+        initial={{ y: 100, opacity: 0, x: "-50%" }} // Start below the screen, hidden, and horizontally centered
+        animate={{ y: 0, opacity: 1, x: "-50%" }} // Animate to its position, still centered
+        transition={{
+          type: "spring", // Use a spring animation for a bounce effect
+          stiffness: 100, // Control the "bounciness"
+          damping: 10, // Control the "speed" of the bounce
+        }}
       >
         <div className="flex h-8 py-2 origin-bottom items-end gap-x-1">
-                {Array(5)
-                  .fill()
-                  .map((_, i) => (
-                    <motion.span
-                      key={i}
-                      className="w-0.5 bg-[#7A1487] block" // Ensure it's a block-level element to control height
-                      initial={{ height: 10 }}
-                      animate={{
-                        height: Math.floor(Math.random() * (20 - 10 + 1)) + 10, // Random height between 10px and 30px
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  ))}
-              </div>
-            <p className="text-sm uppercase text-[#7A1487] font-semibold">simi - Happy birthday</p>
-            
-              
-              <AudioPlayer />
-            </motion.div>
+          {Array(5)
+            .fill()
+            .map((_, i) => (
+              <motion.span
+                key={i}
+                className="w-0.5 bg-[#7A1487] block" // Ensure it's a block-level element to control height
+                initial={{ height: 10 }}
+                animate={{
+                  height: Math.floor(Math.random() * (20 - 10 + 1)) + 10, // Random height between 10px and 30px
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+        </div>
+        <p className="text-sm uppercase text-[#7A1487] font-semibold">
+          simi - Happy birthday
+        </p>
+
+        <AudioPlayer setTooltip={setTooltip} />
+      </motion.div>
+      {tooltip && <motion.div 
+      initial={{ opacity: 0, y: "0%" }}
+      animate={{ opacity: 1, y: ["0%", "-20%"] }}
+      transition={{
+        opacity: { duration: 1, ease: "easeOut" }, // Fade-in duration and easing
+        y: {
+          duration: 1, // Duration of the up and down movement
+          repeat: Infinity, // Repeat the animation infinitely
+          repeatType: "loop", // Loop type: infinite loop
+          ease: "easeInOut" // Smooth easing function for continuous movement
+        }
+      }}
+      className="fixed rounded-full right-32 bottom-[100px] px-2 bg-[#7A1487] text-white">
+        <div className="absolute -bottom-1 right-3 size-3 rotate-45 bg-[#7A1487] -z-10"></div>
+        <p>
+          <span className='whitespace-nowrap text-white/90 text-sm relative z-1'>Click me to start playing</span> 👇
+          </p>
+      </motion.div>}
       {!isExploding && (
         <motion.h1
           key={current}
@@ -125,19 +144,36 @@ const Countdown = () => {
       )}
       {isExploding && (
         <>
-          <div className="fixed left-0 top-0 h-10">
+          <motion.div 
+          initial={{ opacity: 0 }} // Start fully transparent and slightly below
+          animate={{ opacity: 1 }} // Fade in to fully opaque and slide up to original position
+          transition={{ duration: 0.3, ease: "easeOut", delay: 0.4 }}
+          
+          className="fixed left-0 top-0 h-10">
             <Image src={celebrate} alt="celebrate" />
-          </div>
-          <div className="fixed left-0 bottom-0">
+          </motion.div>
+          <motion.div
+          initial={{ opacity: 0 }} // Start fully transparent and slightly below
+          animate={{ opacity: 1 }} // Fade in to fully opaque and slide up to original position
+          transition={{ duration: 0.3, ease: "easeOut", delay: 0.4 }}
+           className="fixed left-0 bottom-0">
             <Image src={celebrate} className="-scale-100" alt="celebrate" />
-          </div>
-          <div className="fixed left-0 bottom-0">
+          </motion.div>
+          <motion.div
+          initial={{ opacity: 0 }} // Start fully transparent and slightly below
+          animate={{ opacity: 1 }} // Fade in to fully opaque and slide up to original position
+          transition={{ duration: 0.3, ease: "easeOut", delay: 0.4 }}
+           className="fixed left-0 bottom-0">
             <Image src={celebrateVert} className="scale-100" alt="celebrate" />
-          </div>
-          <div className="fixed right-0 bottom-0">
+          </motion.div>
+          <motion.div
+          initial={{ opacity: 0 }} // Start fully transparent and slightly below
+          animate={{ opacity: 1 }} // Fade in to fully opaque and slide up to original position
+          transition={{ duration: 0.3, ease: "easeOut", delay: 0.4 }}
+          className="fixed right-0 bottom-0">
             <Image src={celebrateVert} className="-scale-100" alt="celebrate" />
-          </div>
-            
+          </motion.div>
+
           <div className="fixed left-0 top-0 pl-10 w-[calc((100vw-1000px)/2)] h-screen">
             <div className=" animate-loop-scroll flex-col items-center flex -space-y-10 font-semibold ">
               <p className="text-[100px] text-[#7A1487]/10 ">H</p>
@@ -173,7 +209,29 @@ const Countdown = () => {
             </div>
           </div>
 
-          <div className=" mx-auto h-full w-[1000px] flex justify-center border">
+          
+      <div className="fixed top-20 right-32 flex gap-4 items-center justify-center ">
+                <button
+                  disabled={selectedId === 0}
+                  className={`${
+                    selectedId === 0 && "opacity-30"
+                  } flex items-center justify-center size-12 bg-white rounded-full text-[#7A1487]`}
+                  onClick={() => setSelectedId(0)}
+                >
+                  <ArrowLeft size={20} />
+                </button>
+                <button
+                  disabled={selectedId === 1}
+                  className={`${
+                    selectedId === 1 && "opacity-30"
+                  } flex items-center justify-center size-12 bg-white rounded-full text-[#7A1487]`}
+                  onClick={() => setSelectedId(1)}
+                >
+                  <ArrowRight size={20} />
+                </button>
+      </div>
+
+          <div className=" mx-auto h-full w-[1000px] flex justify-center">
             <div className="flex w-[350px] flex-col justify-between py-20 h-full">
               <div className="flex w-full justify-end items-center pr-[50px]">
                 <div className="flex items-center justify-center size-7 relative bg-[#F4E4DE] border border-[#7A1487] rounded-full">
@@ -200,80 +258,114 @@ const Countdown = () => {
                   )}
                 </div>
               </div>
-              <div className="flex flex-col gap-y-10">
-                <div className="w-[210px] h-[250px] bg-white rounded-2xl -rotate-[15deg] origin-left"></div>
-                <div className="w-[210px] h-[250px] bg-white rounded-2xl rotate-[15deg]"></div>
+              <div className="flex flex-col gap-y-5">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                  animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="w-[200px] h-[230px] bg-white rounded-2xl -rotate-[15deg] origin-left overflow-hidden"
+                >
+                  <div className="w-[300px] relative right-16 -top-8 group">
+                    <Image
+                      src={muna}
+                      quality={100}
+                      className="rotate-[15deg] group-hover:scale-110 group-hover:rotate-[1deg] transform transition-all duration-300"
+                    />
+                  </div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                  animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                  transition={{ duration: 0.3, ease: "easeOut", delay: 0.3 }}
+                  className="w-[200px] h-[230px] bg-white rounded-2xl rotate-[15deg] origin-left overflow-hidden"
+                >
+                  <div className="w-[300px] relative right-16 -top-8 group">
+                    <Image
+                      src={muna2}
+                      quality={100}
+                      className="-rotate-[15deg] group-hover:scale-110 group-hover:rotate-[1deg] transform transition-all duration-300"
+                    />
+                  </div>
+                </motion.div>
               </div>
             </div>
             <div className="relative">
               {selectedId === 0 && (
                 <div className="flex w-[650px] flex-col jusitfy-between pt-20 pr-20">
-                  <h3 className="text-[30px] text-[#3A133F] font-bold">
-                    At Paystack, when we find music we like, we share to a #fun
-                    music channel on Slack for others to enjoy
-                  </h3>
-                  <p className="mt-10 leading-[30px] text-lg text-[#3A133F] pr-16">
-                    At the end of each month, our music bot automatically
-                    fetches all the Spotify tracks, creates a mixtape with
-                    custom cover art, and publishes it online. <br />{" "}
-                    <span className="flex py-2"></span>
-                    Like the people who co-created them, each playlist is an
-                    eclectic mix, so don't be surprised if a grime track is
-                    followed by amapiano 😅. Each mixtape captures the shared
-                    highs and lows of the ~100 friends who make Paystack. Each
-                    is a tapestry of many colours, spun by many hands.{" "}
+                  <motion.h3
+                    initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                    animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                    transition={{ duration: 0.3, ease: "easeOut", delay: 0.2 }}
+                    className="text-[28px] text-[#3A133F] font-bold"
+                  >
+                    Echoes of your strength and grace
+                  </motion.h3>
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                    animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                    transition={{ duration: 0.3, ease: "easeOut", delay: 0.4 }}
+                    className="mt-5 leading-[30px] text-[17px] text-[#3A133F] pr-16"
+                  >
+                    Kind but firm, courageous but gentle, you sometimes withdraw
+                    to seclude yourself, but you always remain beautiful. These
+                    are the words that fill my heart of hearts when the thought
+                    of you echoes (every other minute, if I’m being honest
+                    😂🤣). <br /> <span className="flex py-2"></span>
+                    You are today the youngest you'll ever be; live in the
+                    present and learn from your past. For the battles you have
+                    survived, I am proud of you. For the battles to come, you'll
+                    be victorious.
                     <br className="h-3" /> <span className="flex py-2"></span>
-                    Paystack Music is a gift from our team to yours. We hope you
-                    find your next favourite song in these Slack mixtapes, and
-                    that these tunes provide good company as you work on the
-                    next big thing. Enjoy!
-                  </p>
-
-                  <div className="mt-10">
-                    <Image src={withLove} alt="with_love" />
-                  </div>
+                    <span className="font-bold">Hey!</span> You are valued.{" "}
+                    <span className="font-bold"> Period!</span> No ifs, no buts,
+                    and you'll be favored,{" "}
+                    <span className="font-bold"> (Bi-Iznillah) بإذن الله</span>
+                    <br className="h-3" /> <span className="flex py-2"></span>
+                    To the person you were, I love you. To the person you are
+                    becoming, I am proud of you. I'm really excited for what
+                    this next chapter will gift you.
+                    <br className="h-3" /> <span className="flex py-2"></span>
+                    <span className="font-bold">
+                      Happy Birthday, Chimchim😍
+                    </span>
+                  </motion.p>
                 </div>
               )}
               {selectedId === 1 && (
-                <div className="flex flex-col pt-20">
+                <div className="flex flex-col pt-2">
                   <div className="flex w-[650px] flex-col gap-10 justify-center py-20">
                     <h2 className="text-2xl text-[#3A133F] font-semibold">
-                      Choose one option and let me know 😎
+                      I have a present for you 😎
+                      <br />
+                      Choose one option and let me know
                     </h2>
-                    <div className="flex gap-10">
-                      <div className="w-[250px] h-[320px] bg-white rounded-2xl flex flex-col items-center justify-center -gap-y-10 text-9xl text-[#7A1487] ">
+                    <div className="flex gap-1">
+                      <div className="relative w-[250px] h-[380px] bg-white rounded-2xl flex flex-col items-center justify-center -gap-y-10 text-9xl text-[#7A1487] overflow-hidden">
                         <Gift size={42} weight="duotone" />A
+                        <span className="absolute bottom-0 -right-2 opacity-10 font-bold">
+                          2
+                        </span>
                       </div>
-                      <div className="w-[250px] h-[320px] bg-white rounded-2xl flex flex-col items-center justify-center text-9xl text-[#7A1487] ">
+                      <div className="relative w-[250px] h-[380px] bg-white rounded-2xl flex flex-col items-center justify-center text-9xl text-[#679DF7] overflow-hidden">
                         <Gift size={42} weight="duotone" />B
+                        <span className="absolute bottom-0 -left-2 opacity-10 text-[#7A1487] font-bold">
+                          5
+                        </span>
                       </div>
                     </div>
                   </div>
-                  <div className="mt-28">
-                    <Image src={withLove} alt="with_love" />
-                  </div>
                 </div>
               )}
-              <div className="absolute h-full top-0 -right-20 flex flex-col gap-4 items-center justify-center pl-10">
-                <button
-                  disabled={selectedId === 0}
-                  className={`${
-                    selectedId === 0 && "opacity-30"
-                  } flex items-center justify-center size-12 bg-white rounded-full text-[#7A1487]`}
-                  onClick={() => setSelectedId(0)}
-                >
-                  <ArrowUp size={20} />
-                </button>
-                <button
-                  disabled={selectedId === 1}
-                  className={`${
-                    selectedId === 1 && "opacity-30"
-                  } flex items-center justify-center size-12 bg-white rounded-full text-[#7A1487]`}
-                  onClick={() => setSelectedId(1)}
-                >
-                  <ArrowDown size={20} />
-                </button>
-              </div>
+                
+              <motion.div
+                initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                transition={{ duration: 0.3, ease: "easeOut", delay: 0.6 }}
+                className=" absolute bottom-10"
+              >
+                <Image src={withLove} alt="with_love" />
+              </motion.div>
+            
             </div>
           </div>
         </>
