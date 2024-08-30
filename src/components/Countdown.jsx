@@ -210,7 +210,7 @@ const Countdown = () => {
           </div>
 
           
-      <div className="fixed top-20 right-32 flex gap-4 items-center justify-center ">
+      <div className="fixed top-20 right-32 flex gap-4 items-center justify-center z-50">
                 <button
                   disabled={selectedId === 0}
                   className={`${
@@ -258,7 +258,7 @@ const Countdown = () => {
                   )}
                 </div>
               </div>
-              <div className="flex flex-col gap-y-5">
+              <div className="flex flex-col gap-y-5 relative">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
                   animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
