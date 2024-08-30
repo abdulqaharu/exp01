@@ -334,24 +334,36 @@ const Countdown = () => {
               {selectedId === 1 && (
                 <div className="flex flex-col pt-2">
                   <div className="flex w-[650px] flex-col gap-10 justify-center py-20">
-                    <h2 className="text-2xl text-[#3A133F] font-semibold">
+                    <motion.h2 
+                    initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                    animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                    transition={{ duration: 0.3, ease: "easeOut", delay: 0.2 }}
+                    className="text-2xl text-[#3A133F] font-semibold">
                       I have a present for you 😎
                       <br />
                       Choose one option and let me know
-                    </h2>
+                    </motion.h2>
                     <div className="flex gap-1">
-                      <div className="relative w-[250px] h-[380px] bg-white rounded-2xl flex flex-col items-center justify-center -gap-y-10 text-9xl text-[#7A1487] overflow-hidden">
+                      <motion.div
+                      initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                      animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                      transition={{ duration: 0.3, ease: "easeOut", delay: 0.4 }}
+                       className="relative w-[250px] h-[380px] bg-white rounded-2xl flex flex-col items-center justify-center -gap-y-10 text-9xl text-[#7A1487] overflow-hidden">
                         <Gift size={42} weight="duotone" />A
                         <span className="absolute bottom-0 -right-2 opacity-10 font-bold">
                           2
                         </span>
-                      </div>
-                      <div className="relative w-[250px] h-[380px] bg-white rounded-2xl flex flex-col items-center justify-center text-9xl text-[#679DF7] overflow-hidden">
+                      </motion.div>
+                      <motion.div 
+                      initial={{ opacity: 0, y: 20 }} // Start fully transparent and slightly below
+                      animate={{ opacity: 1, y: 0 }} // Fade in to fully opaque and slide up to original position
+                      transition={{ duration: 0.3, ease: "easeOut", delay: 0.5 }}
+                      className="relative w-[250px] h-[380px] bg-white rounded-2xl flex flex-col items-center justify-center text-9xl text-[#679DF7] overflow-hidden">
                         <Gift size={42} weight="duotone" />B
                         <span className="absolute bottom-0 -left-2 opacity-10 text-[#7A1487] font-bold">
                           5
                         </span>
-                      </div>
+                      </motion.div>
                     </div>
                   </div>
                 </div>
